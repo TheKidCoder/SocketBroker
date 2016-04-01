@@ -13,10 +13,7 @@ module SocketBroker
     end
 
     def broadcast(message : String)
-      @open_sockets.each {|sock| 
-        sock.send(message)
-
-      }
+      @open_sockets.each {|sock| sock.send(message)}
     end
 
     def server
