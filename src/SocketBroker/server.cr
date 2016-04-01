@@ -21,14 +21,14 @@ module SocketBroker
     end
 
     private def on_socket_open(socket)
-      puts "Socket Open".colorize(:green)
+      @config.logger.debug "Socket Open".colorize(:green)
 
       socket.on_message do |message|
-        puts ["MSG RECIEVED".colorize(:green), message.colorize(:yellow)].join(" ## ")
+        @config.logger.debug ["MSG RECIEVED".colorize(:green), message.colorize(:yellow)].join(" ## ")
       end
 
       socket.on_close do |message|
-        puts "Socket ID: #{@open_sockets.index(socket)} - Closed".colorize(:red)
+        @config.logger.debug "Socket ID: #{@open_sockets.index(socket)} - Closed".colorize(:red)
         @open_sockets.delete(socket)
       end
 
