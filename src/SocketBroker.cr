@@ -11,7 +11,7 @@ OptionParser.parse! do |parser|
   parser.banner = "Usage: SocketBroker [arguments]"
   parser.on("-p", "--port", "Port to bind to") { |port| config.port = port.to_i }
   parser.on("-h", "--host", "Interface to bind to") { |host| config.bind = host.to_s }
-  parser.on("-h", "--help", "Show this help") { puts parser; exit; }
+  parser.on("--help", "--help", "Show this help") { puts parser; exit; }
 end
 
 config.logger.level = Logger::DEBUG
@@ -21,14 +21,18 @@ config.logger.level = Logger::DEBUG
 puts "Listening for websockets on interface: #{config.bind} port: #{config.port}"
 
 server = SocketBroker::Server.new(config)
+poller = SocketBroker::Poller.new("crystal") do |channel, message|
+  config.logger.debug(message)
+  server.broadcast(message)
+end
+
 spawn do
   server.start
 end
 
-puts "WE OUT HERE"
-while true
-  sleep 2
-  server.broadcast("From Crystal")
-end
+poller.listen
+# while true
+  
+# end
 
 
