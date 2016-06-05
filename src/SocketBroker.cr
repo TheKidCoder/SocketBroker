@@ -1,4 +1,5 @@
 require "redis"
+require "option_parser"
 require "./SocketBroker/*"
 
 module SocketBroker
@@ -6,10 +7,20 @@ end
 
 config = SocketBroker::Config.new
 
+OptionParser.parse! do |parser|
+  parser.banner = "Usage: SocketBroker [arguments]"
+  parser.on("-p", "--port", "Port to bind to") { |port| config.port = port.to_i }
+  parser.on("-h", "--host", "Interface to bind to") { |host| config.bind = host.to_s }
+  parser.on("-h", "--help", "Show this help") { puts parser; exit; }
+end
+
+config.logger.level = Logger::DEBUG
+
+
+
+puts "Listening for websockets on interface: #{config.bind} port: #{config.port}"
+
 server = SocketBroker::Server.new(config)
-
-puts "Listening for websockets on:#{config.bind} port:#{config.port}"
-
 spawn do
   server.start
 end
