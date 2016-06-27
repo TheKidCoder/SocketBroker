@@ -21,7 +21,7 @@ config.logger.level = Logger::DEBUG
 puts "Listening for websockets on interface: #{config.bind} port: #{config.port}"
 
 server = SocketBroker::Server.new(config)
-poller = SocketBroker::Poller.new("crystal") do |channel, message|
+poller = SocketBroker::Poller.new(config) do |channel, message|
   config.logger.debug(message)
   server.broadcast(message)
 end
@@ -31,8 +31,3 @@ spawn do
 end
 
 poller.listen
-# while true
-  
-# end
-
-

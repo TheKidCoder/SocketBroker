@@ -1,13 +1,13 @@
 module SocketBroker
   class Poller
-    def initialize(@channel_name : String, &@on_message : (String, String) -> _)
+    def initialize(@config : SocketBroker::Config, &@on_message : (String, String) ->)
       @redis = Redis.new
     end
 
     def listen
-      @redis.subscribe(@channel_name) do |on|
+      @redis.subscribe(@config.channel) do |on|
         on.message do |channel, message|
-          @on_message.call(channel, message)
+          @on_message.call(@config.channel, message)
         end
       end
     end

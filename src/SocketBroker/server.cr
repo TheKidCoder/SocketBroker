@@ -3,9 +3,10 @@ require "colorize"
 
 module SocketBroker
   class Server
-    def initialize(config)
+    def initialize(config : SocketBroker::Config)
       @config = config
       @open_sockets = [] of HTTP::WebSocket
+      @redis = Redis.new
     end
 
     def start
@@ -13,7 +14,7 @@ module SocketBroker
     end
 
     def broadcast(message : String)
-      @open_sockets.each {|sock| sock.send(message)}
+      @open_sockets.each { |sock| sock.send(message) }
     end
 
     def server
@@ -22,9 +23,9 @@ module SocketBroker
 
     private def on_socket_open(socket)
       @config.logger.debug "Socket Open".colorize(:green)
-
       socket.on_message do |message|
         @config.logger.debug ["MSG RECIEVED".colorize(:green), message.colorize(:yellow)].join(" ## ")
+        @redis.publish @config.channel, message
       end
 
       socket.on_close do |message|
@@ -43,4 +44,4 @@ module SocketBroker
       ]
     end
   end
-end 
+end

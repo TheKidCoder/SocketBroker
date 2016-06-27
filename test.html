@@ -9,6 +9,14 @@
   function init()
   {
     output = document.getElementById("output");
+    msg = document.getElementById('msg');
+    document.getElementById('submit').addEventListener('click', function(e){
+      e.preventDefault()
+      doSend(msg.value);
+      msg.value = '';
+      msg.focus();
+    });
+
     testWebSocket();
   }
 
@@ -35,7 +43,6 @@
   function onMessage(evt)
   {
     writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
-    websocket.close();
   }
 
   function onError(evt)
@@ -62,6 +69,5 @@
   </script>
 
   <h2>WebSocket Test</h2>
-
+  <input id="msg" /><a href="#" id="submit">submit</a>
   <div id="output"></div>
-          
