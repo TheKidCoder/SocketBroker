@@ -14,7 +14,7 @@ OptionParser.parse! do |parser|
   parser.on("--help", "--help", "Show this help") { puts parser; exit; }
 end
 
-config.logger.level = Logger::DEBUG
+config.logger.level = Logger::WARN
 
 
 

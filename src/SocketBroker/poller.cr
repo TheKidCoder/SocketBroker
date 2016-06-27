@@ -1,6 +1,7 @@
 module SocketBroker
   class Poller
-    def initialize(@channel_name : String, &@on_message : (String, String) -> _)
+    def initialize(@channel_name : String, &on_message : (String, String) ->)
+      @on_message = on_message
       @redis = Redis.new
     end
 

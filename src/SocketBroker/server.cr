@@ -3,7 +3,7 @@ require "colorize"
 
 module SocketBroker
   class Server
-    def initialize(config)
+    def initialize(config : SocketBroker::Config)
       @config = config
       @open_sockets = [] of HTTP::WebSocket
     end
